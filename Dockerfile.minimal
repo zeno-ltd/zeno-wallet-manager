@@ -1,0 +1,12 @@
+FROM tatumio/tatum-kms:4.1.4 AS BUILD_IMAGE
+
+# Create app directory
+
+WORKDIR /usr/src/app
+
+
+ENTRYPOINT []
+ADD wallet.dat /root/.tatumrc/wallet.dat
+ADD kms /
+EXPOSE 4000
+CMD ["/kms"]

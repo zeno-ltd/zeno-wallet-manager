@@ -19,9 +19,9 @@ func CreateAddress(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.DOCKER, "run", "-e", "TATUM_KMS_PASSWORD="+config.Get("TATUM_KMS_PASSWORD"), "-v", "tatum:/root/.tatumrc", config.TATUM_KMS, "--testnet", "getaddress", walletCfg.WalletID.String(), strconv.Itoa(walletCfg.Index)).Output()
+		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "--testnet", "getaddress", walletCfg.WalletID.String(), strconv.Itoa(walletCfg.Index)).Output()
 	} else {
-		response, cmdErr = exec.Command(config.DOCKER, "run", "-e", "TATUM_KMS_PASSWORD="+config.Get("TATUM_KMS_PASSWORD"), "-v", "tatum:/root/.tatumrc", config.TATUM_KMS, "getaddress", walletCfg.WalletID.String(), strconv.Itoa(walletCfg.Index)).Output()
+		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "getaddress", walletCfg.WalletID.String(), strconv.Itoa(walletCfg.Index)).Output()
 	}
 	if cmdErr != nil {
 		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error())})

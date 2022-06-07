@@ -1,0 +1,3 @@
+[submodule "tatum-kms"]
+	path = tatum-kms
+	url = https://github.com/tatumio/tatum-kms.git
