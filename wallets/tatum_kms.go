@@ -3,7 +3,6 @@ package wallets
 import (
 	"encoding/json"
 	"os/exec"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/zeno/zeno-wallet-manager/config"
@@ -19,9 +18,9 @@ func CreateAddress(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "--testnet", "getaddress", walletCfg.WalletID.String(), strconv.Itoa(walletCfg.Index)).Output()
+		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "--testnet", "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
 	} else {
-		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "getaddress", walletCfg.WalletID.String(), strconv.Itoa(walletCfg.Index)).Output()
+		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
 	}
 	if cmdErr != nil {
 		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error())})
