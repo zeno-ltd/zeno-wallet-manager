@@ -1,8 +1,7 @@
 
 # zeno-wallet-manager
 Will locally use tatum KMS for wallet management
-An internal api to generate an address from a protected pre configured wallet,
-each address will be associated with a user.
+
 
 ## Creating wallets
 To install on local development environment, you will need to generate your own custodial wallet for local testing, the original wallet.dat file will not be shared for security reasons.
@@ -13,9 +12,9 @@ docker run -it -v tatum:/root/.tatumrc -e TATUM_KMS_PASSWORD="Your own local pas
 docker run -it -v tatum:/root/.tatumrc -e TATUM_KMS_PASSWORD="Your own local password here" tatumio/tatum-kms --testnet getprivatekey {{wallet_id}} //returned in previous step
 docker run -it -v tatum:/root/.tatumrc -e TATUM_KMS_PASSWORD="Your own local password here" tatumio/tatum-kms --testnet storemanagedprivatekey MATIC
 ```
-copy the wallet.dat file created in ```$HOME/tatum``` it will required for creating the internal api service for generating wallet addresses for users in the below steps.
+copy the wallet.dat file created in ```$HOME/tatum``` it will be required for creating the internal api service that generates wallet addresses for users/businesses in the below steps.
 
-More details on tatum kms [here](%28https://docs.tatum.io/tutorials/how-to-securely-store-private-keys#5.-store-the-private-key-to-your-wallet%29)
+More details on tatum kms [here](https://docs.tatum.io/tutorials/how-to-securely-store-private-keys#5.-store-the-private-key-to-your-wallet)
 
 ## Setup (internal api service)
 ```
