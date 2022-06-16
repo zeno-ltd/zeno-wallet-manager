@@ -13,3 +13,8 @@ type WalletConfig struct {
 type NewAddress struct {
 	Address string `json:"address"`
 }
+
+//CustodialSigner maps to the response from cli command for getprivatekey
+type CustodialSigner struct {
+	PrivateKey string `json:"privateKey"`
+}

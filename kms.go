@@ -28,6 +28,7 @@ func main() {
 	/* routes for wallet functionality*/
 	walletGroup := api.Group("/wallets")
 	walletGroup.Post("/address", wallets.CreateAddress)
+	walletGroup.Post("/signer", wallets.FetchSigner)
 
 	app.Listen(config.Get("HTTP_KMS_PORT"))
 }
