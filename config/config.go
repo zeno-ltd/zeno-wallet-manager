@@ -1,34 +1,30 @@
 package config
 
 import (
-	"fmt"
 	"os"
+
+	"github.com/caarlos0/env/v6"
+	log "github.com/sirupsen/logrus"
 )
 
-// Get get environment variable
-func Get(key string) string {
-	value, exists := os.LookupEnv(key)
-	if !exists && value != "" {
-		fmt.Println("Environment variable not found!", key)
-		os.Exit(1)
-	}
-	return value
+//Config will store all env variables in the struct
+type Config struct {
+	KmsPassword     string `env:"KMS_PASSWORD,notEmpty,unset"`
+	WorkDIR         string `env:"WORKDIR,notEmpty"`
+	HTTPKmsPort     string `env:"HTTP_KMS_PORT,notEmpty"`
+	NodeExec        string `env:"NODE_EXEC,notEmpty"`
+	KmsCMD          string `env:"KMS_CMD,notEmpty,unset"`
+	WalletCipherKey string `env:"WALLET_CIPHER_KEY,notEmpty,unset"`
 }
 
-// Set set environment variable
-func Set(key string, value string) {
-	err := os.Setenv(key, value)
-	if err != nil {
-		fmt.Println("Environment variable not set!")
-		os.Exit(1)
-	}
-}
+//KmsConfig global config object
+var KmsConfig *Config
 
-//UnSet unset environment variable
-func UnSet(key string) {
-	err := os.Unsetenv(key)
-	if err != nil {
-		fmt.Println("Environment variable not reset!")
+//LoadConfig creates the KmsConfig object on startup
+func LoadConfig() {
+	KmsConfig = &Config{}
+	if err := env.Parse(KmsConfig); err != nil {
+		log.Error("Environment variable not set!", err.Error())
 		os.Exit(1)
 	}
 }

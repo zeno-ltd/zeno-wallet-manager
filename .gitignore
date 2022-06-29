@@ -2,3 +2,5 @@
 .vscode/*
 .node_modules/*
 wallet.dat
+addresses.txt
+generate.sh

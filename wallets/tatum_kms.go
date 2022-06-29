@@ -18,9 +18,9 @@ func CreateAddress(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "--testnet", "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
 	} else {
-		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
 	}
 	if cmdErr != nil {
 		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error())})
@@ -28,7 +28,7 @@ func CreateAddress(ctx *fiber.Ctx) error {
 	address := &NewAddress{}
 	err := json.Unmarshal(response, address)
 	if err != nil {
-		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, "TATUM KMS: Failed to parse response for getaddress command!")})
+		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, "KMS: Failed to parse response for getaddress command!")})
 	}
 	return ctx.JSON(fiber.Map{"status": "success", "data": address})
 }
@@ -43,9 +43,9 @@ func FetchSigner(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "--testnet", "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.KmsCMD, config.KmsConfig.KmsCMD, "--testnet", "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).Output()
 	} else {
-		response, cmdErr = exec.Command(config.Get("NODE_EXEC"), config.Get("TATUM_KMS"), "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.KmsCMD, config.KmsConfig.KmsCMD, "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).Output()
 	}
 	if cmdErr != nil {
 		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error())})
@@ -53,12 +53,12 @@ func FetchSigner(ctx *fiber.Ctx) error {
 	signer := &CustodialSigner{}
 	err := json.Unmarshal(response, signer)
 	if err != nil {
-		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, "TATUM KMS: Failed to parse response for getprivatekey command!")})
+		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, "KMS: Failed to parse response for getprivatekey command!")})
 	}
 	var data map[string]string
 	encrypted, err := Encrypt(signer.PrivateKey)
 	if err != nil {
-		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, "TATUM KMS: "+err.Error())})
+		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, "KMS: "+err.Error())})
 	}
 	data = make(map[string]string, 1)
 	data["signer"] = encrypted

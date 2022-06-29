@@ -12,6 +12,8 @@ import (
 
 func main() {
 
+	config.LoadConfig()
+
 	app := fiber.New()
 	api := app.Group("/v1", requestid.New())
 	api.Use(logger.New(logger.Config{
@@ -30,5 +32,5 @@ func main() {
 	walletGroup.Post("/address", wallets.CreateAddress)
 	walletGroup.Post("/signer", wallets.FetchSigner)
 
-	app.Listen(config.Get("HTTP_KMS_PORT"))
+	app.Listen(config.KmsConfig.HTTPKmsPort)
 }

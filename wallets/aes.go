@@ -14,7 +14,7 @@ import (
 
 // Encrypt encrypts plain text string into cipher text string
 func Encrypt(unencrypted string) (string, error) {
-	key := []byte(config.Get("WALLET_CIPHER_KEY"))
+	key := []byte(config.KmsConfig.WalletCipherKey)
 	plainText := []byte(unencrypted)
 	plainText, err := pkcs7.Pad(plainText, aes.BlockSize)
 	if err != nil {
@@ -44,7 +44,7 @@ func Encrypt(unencrypted string) (string, error) {
 
 // Decrypt decrypts cipher text string into plain text string
 func Decrypt(encrypted string) (string, error) {
-	key := []byte(config.Get("WALLET_CIPHER_KEY"))
+	key := []byte(config.KmsConfig.WalletCipherKey)
 	cipherText, _ := hex.DecodeString(encrypted)
 
 	block, err := aes.NewCipher(key)
