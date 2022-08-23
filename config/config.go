@@ -9,7 +9,7 @@ import (
 
 //Config will store all env variables in the struct
 type Config struct {
-	KmsPassword     string `env:"KMS_PASSWORD,notEmpty,unset"`
+	KmsPassword     string `env:"TATUM_KMS_PASSWORD,notEmpty,unset"`
 	WorkDIR         string `env:"WORKDIR"`
 	HTTPKmsPort     string `env:"HTTP_KMS_PORT,notEmpty"`
 	NodeExec        string `env:"NODE_EXEC,notEmpty"`

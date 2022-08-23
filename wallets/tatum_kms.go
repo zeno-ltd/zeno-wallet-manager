@@ -2,6 +2,7 @@ package wallets
 
 import (
 	"encoding/json"
+	"os"
 	"os/exec"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,9 +19,15 @@ func CreateAddress(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getaddress", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
+		cmd := exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getaddress", walletCfg.WalletID.String(), walletCfg.Index)
+		cmd.Env = os.Environ()
+		cmd.Env = append(cmd.Env, "TATUM_KMS_PASSWORD="+config.KmsConfig.KmsPassword)
+		response, cmdErr = cmd.CombinedOutput()
 	} else {
-		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getaddress", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
+		cmd := exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getaddress", walletCfg.WalletID.String(), walletCfg.Index)
+		cmd.Env = os.Environ()
+		cmd.Env = append(cmd.Env, "TATUM_KMS_PASSWORD="+config.KmsConfig.KmsPassword)
+		response, cmdErr = cmd.CombinedOutput()
 	}
 	if cmdErr != nil {
 		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error()+": "+string(response))})
@@ -43,9 +50,15 @@ func FetchSigner(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
+		cmd := exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index)
+		cmd.Env = os.Environ()
+		cmd.Env = append(cmd.Env, "TATUM_KMS_PASSWORD="+config.KmsConfig.KmsPassword)
+		response, cmdErr = cmd.CombinedOutput()
 	} else {
-		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
+		cmd := exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index)
+		cmd.Env = os.Environ()
+		cmd.Env = append(cmd.Env, "TATUM_KMS_PASSWORD="+config.KmsConfig.KmsPassword)
+		response, cmdErr = cmd.CombinedOutput()
 	}
 	if cmdErr != nil {
 		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error()+": "+string(response))})
