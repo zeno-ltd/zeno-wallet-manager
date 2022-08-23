@@ -18,12 +18,12 @@ func CreateAddress(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getaddress", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
 	} else {
-		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getaddress", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getaddress", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
 	}
 	if cmdErr != nil {
-		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error())})
+		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error()+": "+string(response))})
 	}
 	address := &NewAddress{}
 	err := json.Unmarshal(response, address)
@@ -43,12 +43,12 @@ func FetchSigner(ctx *fiber.Ctx) error {
 	var response []byte
 	var cmdErr error
 	if walletCfg.Network == "testnet" {
-		response, cmdErr = exec.Command(config.KmsConfig.KmsCMD, config.KmsConfig.KmsCMD, "--testnet", "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "--testnet", "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
 	} else {
-		response, cmdErr = exec.Command(config.KmsConfig.KmsCMD, config.KmsConfig.KmsCMD, "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).Output()
+		response, cmdErr = exec.Command(config.KmsConfig.NodeExec, config.KmsConfig.KmsCMD, "getprivatekey", walletCfg.WalletID.String(), walletCfg.Index).CombinedOutput()
 	}
 	if cmdErr != nil {
-		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error())})
+		return ctx.JSON(fiber.Map{"status": "error", "data": fiber.NewError(fiber.StatusInternalServerError, cmdErr.Error()+": "+string(response))})
 	}
 	signer := &CustodialSigner{}
 	err := json.Unmarshal(response, signer)
