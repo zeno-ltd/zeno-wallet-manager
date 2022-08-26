@@ -5,3 +5,4 @@ wallet.dat
 addresses.txt
 generate.sh
 kms
+!kms/
