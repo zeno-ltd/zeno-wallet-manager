@@ -1,4 +1,4 @@
-package wallets
+package domain
 
 import "github.com/google/uuid"
 
@@ -17,4 +17,17 @@ type NewAddress struct {
 //CustodialSigner maps to the response from cli command for getprivatekey
 type CustodialSigner struct {
 	PrivateKey string `json:"privateKey"`
+}
+
+//SecretOpts ...
+type SecretOpts struct {
+	JwtSecret       string
+	WalletCipherKey string
+}
+
+//KmsOpts ...
+type KmsOpts struct {
+	NodeExec    string
+	KmsCMD      string
+	KmsPassword string
 }
